@@ -53,7 +53,11 @@ Your core responsibilities:
 9. **Best Practices**:
    - Start with an executive summary or overview for context
    - Use consistent formatting and markdown conventions
+   - **For dated documents**: Use exact timestamp format `YYYY-MM-DD HH:MM:SS`
+     - Get current timestamp using: `date +"%Y-%m-%d %H:%M:%S"` command
+     - NEVER manually type or guess dates
    - Include timestamps or version information for time-sensitive content
+   - Save documentation in appropriate directories (e.g., `./Docs/` for project docs, `./Docs/reviews/` for code reviews)
    - Provide both minimal examples for quick understanding and comprehensive examples for complex scenarios
    - Document the 'why' behind decisions, not just the 'what' and 'how'
    - Consider internationalization needs if relevant
