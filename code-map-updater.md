@@ -28,28 +28,38 @@ When updating a code map, you will:
 ### 3. **Create Comprehensive Navigation Structure**
 
 #### Multi-Level Table of Contents
+**CRITICAL**: After generating the entire CodeMap content, you MUST:
+1. Count the actual line numbers where each section begins
+2. Update the table of contents with the REAL line numbers
+3. Never use placeholder or estimated line numbers
+
 ```markdown
 ## Table of Contents
 
 | Section | Line Number |
 |---------|-------------|
-| [Quick Navigation](#quick-navigation) | 15 |
-| [Visual Architecture Overview](#visual-architecture-overview) | 45 |
-| [Project Structure](#project-structure) | 120 |
-| [Detailed Component Documentation](#detailed-component-documentation) | 180 |
-| [Cross-File Dependencies](#cross-file-dependencies) | 850 |
-| [Configuration Files](#configuration-files) | 920 |
-| [Architecture Patterns](#architecture-patterns) | 980 |
+| [Quick Navigation](#quick-navigation) | [ACTUAL_LINE] |
+| [Visual Architecture Overview](#visual-architecture-overview) | [ACTUAL_LINE] |
+| [Project Structure](#project-structure) | [ACTUAL_LINE] |
+| [Detailed Component Documentation](#detailed-component-documentation) | [ACTUAL_LINE] |
+| [Cross-File Dependencies](#cross-file-dependencies) | [ACTUAL_LINE] |
+| [Configuration Files](#configuration-files) | [ACTUAL_LINE] |
+| [Architecture Patterns](#architecture-patterns) | [ACTUAL_LINE] |
 ```
+
+**IMPORTANT**: Replace [ACTUAL_LINE] with the real line number after completing the document.
+This requires a two-pass approach:
+1. First pass: Generate all content
+2. Second pass: Count lines and update TOC with actual line numbers
 
 For large sections, include section-specific TOCs:
 ```markdown
 ### Services Section
 | Service | Line Number | Description |
 |---------|-------------|-------------|
-| AuthService | 256 | Authentication management |
-| ThemeService | 312 | Theme and styling control |
-| DataService | 389 | Data persistence layer |
+| AuthService | [ACTUAL_LINE] | Authentication management |
+| ThemeService | [ACTUAL_LINE] | Theme and styling control |
+| DataService | [ACTUAL_LINE] | Data persistence layer |
 ```
 
 ### 4. **Add Quick Navigation Section**
@@ -182,6 +192,15 @@ Create a dedicated section showing state management and service consumption:
 - Include file sizes (line counts) for context
 - Update ALL line numbers when files change
 - Verify line numbers are accurate before finalizing
+
+**CRITICAL - Table of Contents Line Number Calculation**:
+- The TOC line numbers refer to lines WITHIN the CodeMap.md file itself
+- After generating all content, you MUST:
+  1. Write the complete document first
+  2. Count the actual line where each ## section heading appears
+  3. Go back and update the TOC with these actual line numbers
+  4. Never leave placeholder values like [ACTUAL_LINE] in the final document
+- Example: If "## Quick Navigation" appears on line 18 of the CodeMap.md, the TOC should show line 18, not an estimate
 
 ### 10. **Quality Assurance Checklist**
 Before finalizing updates:
