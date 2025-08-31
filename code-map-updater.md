@@ -28,10 +28,12 @@ When updating a code map, you will:
 ### 3. **Create Comprehensive Navigation Structure**
 
 #### Multi-Level Table of Contents
-**CRITICAL**: After generating the entire CodeMap content, you MUST:
-1. Count the actual line numbers where each section begins
-2. Update the table of contents with the REAL line numbers
-3. Never use placeholder or estimated line numbers
+**CRITICAL - MANDATORY THREE-PASS VERIFICATION PROCESS**: 
+
+You MUST follow this exact process to ensure accurate line numbers:
+
+##### PASS 1: Generate Content
+Generate the complete CodeMap document with placeholder line numbers in the TOC:
 
 ```markdown
 ## Table of Contents
@@ -47,10 +49,49 @@ When updating a code map, you will:
 | [Architecture Patterns](#architecture-patterns) | [ACTUAL_LINE] |
 ```
 
-**IMPORTANT**: Replace [ACTUAL_LINE] with the real line number after completing the document.
-This requires a two-pass approach:
-1. First pass: Generate all content
-2. Second pass: Count lines and update TOC with actual line numbers
+##### PASS 2: Verify Line Numbers
+After writing the complete document, you MUST:
+1. Run this command to find actual line numbers:
+   ```bash
+   grep -n "^## " CodeMap.md | grep -v "Table of Contents"
+   ```
+2. Record the actual line number for each section
+3. Create a verification mapping showing section → line number
+
+##### PASS 3: Update and Re-Verify
+1. Update the TOC with the verified line numbers from Pass 2
+2. Run the grep command again to confirm accuracy:
+   ```bash
+   grep -n "^## " CodeMap.md | grep -v "Table of Contents"
+   ```
+3. If ANY discrepancies are found, repeat the entire process
+4. Show the grep output as proof of verification
+
+**VERIFICATION ALGORITHM**:
+```python
+# Pseudocode for line number verification
+def verify_toc_line_numbers(codemap_content):
+    # Step 1: Find all section headers
+    sections = grep_command("grep -n '^## ' CodeMap.md")
+    
+    # Step 2: Extract line numbers
+    line_mapping = {}
+    for section in sections:
+        line_num, section_name = section.split(':', 1)
+        section_name = section_name.strip('## ').strip()
+        if section_name != "Table of Contents":
+            line_mapping[section_name] = int(line_num)
+    
+    # Step 3: Update TOC with actual line numbers
+    for section_name, line_num in line_mapping.items():
+        replace_in_toc(f"[{section_name}]", line_num)
+    
+    # Step 4: Verify again
+    final_check = grep_command("grep -n '^## ' CodeMap.md")
+    return verify_matches(line_mapping, final_check)
+```
+
+**IMPORTANT**: Never use estimated or placeholder line numbers in the final document. The TOC must contain the EXACT line numbers where each section appears.
 
 For large sections, include section-specific TOCs:
 ```markdown
@@ -75,31 +116,176 @@ Include primary user actions and key entry points at the top:
 ```
 
 ### 5. **Create Visual Architecture Documentation**
-Include ASCII diagrams showing system architecture:
+Include ASCII diagrams showing system architecture.
+
+**CRITICAL ASCII Diagram Alignment Rules - MANDATORY FOR 100% ALIGNMENT**:
+
+#### Box Drawing Algorithm (MUST FOLLOW EXACTLY):
+1. **STEP 1 - Calculate Maximum Width**: 
+   - Find the longest line of text that will be in ANY box in the diagram
+   - Add 4 characters for padding (2 spaces on each side)
+   - This is your MINIMUM BOX WIDTH for ALL boxes in that row/column
+   
+2. **STEP 2 - Apply Consistent Width**:
+   - ALL boxes in the same column MUST have EXACTLY the same width
+   - If boxes are side-by-side, they MUST have the same width OR be clearly separated
+   
+3. **STEP 3 - Pad Every Line**:
+   - EVERY line inside a box MUST be padded with spaces to reach the box width
+   - Formula: `│ ` + text + spaces to fill + ` │`
+   - The closing `│` MUST be at EXACTLY the same column position for every line
+
+4. **STEP 4 - Count Characters**:
+   - Physically count the characters in each line
+   - The distance from line start to closing `│` MUST be identical for all lines in a box
+   - Use the formula: width = opening_border(1) + space(1) + text(n) + padding_spaces(x) + space(1) + closing_border(1)
+
+#### Character Usage Rules:
+- **Box corners**: `┌` `┐` (top), `└` `┘` (bottom)
+- **Lines**: `─` (horizontal), `│` (vertical)
+- **Junctions**: `├` `┤` `┬` `┴` `┼`
+- **Arrows**: `▼` `▲` `◄` `►`
+
+#### MANDATORY Box Construction Pattern:
+```
+For a box with content lines of varying length:
+1. Find longest line: "SerilogLoggingService (Alternative)" = 36 chars
+2. Add padding: 36 + 4 = 40 total width
+3. Create box:
+
+┌──────────────────────────────────────┐  <- 40 chars total
+│ SerilogLoggingService (Alternative)  │  <- 2 + 36 + 2 = 40
+│ Utilities/                           │  <- 2 + 10 + 28 spaces + 2 = 40
+│ - Structured logging                 │  <- 2 + 20 + 18 spaces + 2 = 40
+└──────────────────────────────────────┘  <- 40 chars total
+```
+
+#### Example of PERFECT Alignment:
 ```markdown
 ## Visual Architecture Overview
 
-┌─────────────────────────────────────────────────────────┐
-│                    Application Layer                      │
-│                   src/app/app.component.ts                │
-└─────────────────────────────────────────────────────────┘
-                              │
-        ┌─────────────────────┴─────────────────────┐
-        ▼                                           ▼
-┌──────────────────┐                    ┌──────────────────┐
-│  Services Layer  │◄───────────────────►│   Pages/Views    │
-│  - AuthService   │                    │  - HomePage      │
-│  - DataService   │                    │  - ProfilePage   │
-└──────────────────┘                    └──────────────────┘
-        ▲                                           ▲
-        └─────────────────────┬─────────────────────┘
-                              ▼
-                  ┌──────────────────┐
-                  │ Shared Components │
-                  │  - HeaderComponent│
-                  │  - FooterComponent│
-                  └──────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│                    Application Layer                     │
+│                 src/app/app.component.ts                 │
+└────────────────────────────┬─────────────────────────────┘
+                             │
+        ┌────────────────────┴────────────────────┐
+        ▼                                         ▼
+┌──────────────────────┐          ┌──────────────────────┐
+│   Services Layer     │          │    Pages/Views       │
+│  - AuthService       │          │   - HomePage         │
+│  - DataService       │          │   - ProfilePage      │
+└──────────────────────┘          └──────────────────────┘
+        ▲                                         ▲
+        └────────────────────┬────────────────────┘
+                             ▼
+                  ┌──────────────────────┐
+                  │  Shared Components   │
+                  │  - HeaderComponent   │
+                  │  - FooterComponent   │
+                  └──────────────────────┘
 ```
+
+#### STRICT Validation Rules (MUST CHECK):
+1. **Line Length Test**: Copy each box line and verify character count is identical
+2. **Column Alignment Test**: All `│` characters in same logical column must be at same position
+3. **Box Closure Test**: Top and bottom borders must be exactly same length
+4. **Padding Test**: Every line must have spaces to reach the closing `│`
+
+#### Common FAILURES to PREVENT:
+```
+WRONG - Variable line lengths:
+┌────────────────────┐
+│ SerilogLoggingService (Alternative)  <- 38 chars from start
+│ Utilities/           <- 13 chars from start (WRONG!)
+│ - Structured logging <- 22 chars from start (WRONG!)
+└────────────────────┘
+
+CORRECT - Consistent line lengths:
+┌──────────────────────────────────────┐
+│ SerilogLoggingService (Alternative)  │  <- 40 chars
+│ Utilities/                           │  <- 40 chars
+│ - Structured logging                 │  <- 40 chars
+└──────────────────────────────────────┘
+
+WRONG - Mismatched box widths in same row:
+┌──────────────────┐     ┌────────────────────────┐
+│ Short Box        │     │ This is a longer box   │
+└──────────────────┘     └────────────────────────┘
+
+CORRECT - Matched widths:
+┌────────────────────────┐     ┌────────────────────────┐
+│ Short Box              │     │ This is a longer box   │
+└────────────────────────┘     └────────────────────────┘
+```
+
+#### Implementation Checklist (MANDATORY):
+- [ ] Calculate the maximum text width across ALL boxes
+- [ ] Set a standard width for all boxes in the same row/column
+- [ ] Count characters for EVERY line to ensure exact width
+- [ ] Pad EVERY line with spaces to reach the closing `│`
+- [ ] Verify closing `│` is at the EXACT same column for all lines
+- [ ] Test by selecting text - all box lines should highlight to same width
+- [ ] Double-check that top `─` count equals bottom `─` count
+
+#### ALGORITHMIC APPROACH (REQUIRED):
+When creating boxes, use this exact algorithm:
+```python
+def create_box(lines, min_width=None):
+    # Step 1: Find the maximum line length
+    max_length = max(len(line) for line in lines)
+    if min_width:
+        max_length = max(max_length, min_width)
+    
+    # Step 2: Add padding (2 spaces on each side)
+    box_width = max_length + 4
+    
+    # Step 3: Create the box
+    top = "┌" + "─" * (box_width - 2) + "┐"
+    bottom = "└" + "─" * (box_width - 2) + "┘"
+    
+    # Step 4: Create middle lines with exact padding
+    middle_lines = []
+    for line in lines:
+        spaces_needed = box_width - len(line) - 4  # 4 = "│ " + " │"
+        padded_line = "│ " + line + " " * spaces_needed + " │"
+        middle_lines.append(padded_line)
+    
+    return [top] + middle_lines + [bottom]
+```
+
+**NEVER** manually type spaces to "look right" - ALWAYS calculate exact padding mathematically!
+
+#### VERIFICATION STEPS (CRITICAL):
+After creating ANY ASCII diagram:
+
+1. **Character Count Verification**:
+   - Select each line of a box (including borders)
+   - Verify all lines have EXACT same character count
+   - Example: If top border is 42 chars, ALL lines must be 42 chars
+
+2. **Visual Alignment Check**:
+   - The closing `│` of every line in a box MUST be in the same column
+   - When viewed in monospace font, vertical edges must form perfect straight lines
+   - NO jagged edges or misaligned characters allowed
+
+3. **Box Consistency Rule**:
+   - If two boxes are side-by-side, they MUST have identical widths
+   - If boxes are in a vertical stack with connectors, the connectors must align perfectly
+
+4. **Mathematical Verification**:
+   For each line in a box, verify this equation:
+   ```
+   Total Width = 1 (│) + 1 (space) + text_length + padding_spaces + 1 (space) + 1 (│)
+   
+   Where: padding_spaces = Total Width - 4 - text_length
+   ```
+
+5. **Common Alignment Errors to Check**:
+   - Missing trailing spaces before closing `│`
+   - Unequal top and bottom border lengths
+   - Inconsistent padding between lines
+   - Boxes in same row with different widths
 
 ### 6. **Document Every Component Comprehensively**
 
@@ -196,14 +382,21 @@ Create a dedicated section showing state management and service consumption:
 **CRITICAL - Table of Contents Line Number Calculation**:
 - The TOC line numbers refer to lines WITHIN the CodeMap.md file itself
 - After generating all content, you MUST:
-  1. Write the complete document first
-  2. Count the actual line where each ## section heading appears
-  3. Go back and update the TOC with these actual line numbers
-  4. Never leave placeholder values like [ACTUAL_LINE] in the final document
-- Example: If "## Quick Navigation" appears on line 18 of the CodeMap.md, the TOC should show line 18, not an estimate
+  1. Write the complete document first with placeholder TOC line numbers
+  2. Execute: `grep -n "^## " CodeMap.md | grep -v "Table of Contents"`
+  3. Record the EXACT line numbers from the grep output
+  4. Update the TOC with these verified line numbers
+  5. Run grep again to double-check accuracy
+  6. Show the final grep output as proof of verification
+  7. NEVER leave placeholder values like [ACTUAL_LINE] in the final document
+- Example: If grep shows "23:## Quick Navigation", the TOC must show line 23
+- **FAILURE TO VERIFY**: If line numbers are not verified with grep, the update is incomplete
 
 ### 10. **Quality Assurance Checklist**
 Before finalizing updates:
+- [ ] **TOC line numbers verified with grep command and output shown**
+- [ ] Ran `grep -n "^## " CodeMap.md` and confirmed all TOC line numbers match
+- [ ] No placeholder values like [ACTUAL_LINE] remain in document
 - [ ] All line numbers verified and current
 - [ ] New files properly categorized
 - [ ] Deleted files removed from documentation
@@ -213,6 +406,7 @@ Before finalizing updates:
 - [ ] Every class/method/property documented with line numbers
 - [ ] Section-specific TOCs added for sections > 100 lines
 - [ ] Quick navigation section includes primary user actions
+- [ ] **Final verification**: Re-ran grep to confirm TOC accuracy
 
 ## Important Guidelines
 
