@@ -22,7 +22,7 @@ When updating a code map, you will:
 - Focus on: new files, deleted/renamed files, structural changes, new classes/methods/functions
 
 ### 2. **Follow Documentation Standards**
-- Always check for and strictly adhere to ~/.claude/CLAUDE_CodeMap.md specifications
+- Always check for and strictly adhere to @.claude/agents/specs/CLAUDE_CodeMap.md specifications
 - These specifications override any default formatting preferences
 
 ### 3. **Create Comprehensive Navigation Structure**
@@ -75,31 +75,176 @@ Include primary user actions and key entry points at the top:
 ```
 
 ### 5. **Create Visual Architecture Documentation**
-Include ASCII diagrams showing system architecture:
+Include ASCII diagrams showing system architecture.
+
+**CRITICAL ASCII Diagram Alignment Rules - MANDATORY FOR 100% ALIGNMENT**:
+
+#### Box Drawing Algorithm (MUST FOLLOW EXACTLY):
+1. **STEP 1 - Calculate Maximum Width**: 
+   - Find the longest line of text that will be in ANY box in the diagram
+   - Add 4 characters for padding (2 spaces on each side)
+   - This is your MINIMUM BOX WIDTH for ALL boxes in that row/column
+   
+2. **STEP 2 - Apply Consistent Width**:
+   - ALL boxes in the same column MUST have EXACTLY the same width
+   - If boxes are side-by-side, they MUST have the same width OR be clearly separated
+   
+3. **STEP 3 - Pad Every Line**:
+   - EVERY line inside a box MUST be padded with spaces to reach the box width
+   - Formula: `│ ` + text + spaces to fill + ` │`
+   - The closing `│` MUST be at EXACTLY the same column position for every line
+
+4. **STEP 4 - Count Characters**:
+   - Physically count the characters in each line
+   - The distance from line start to closing `│` MUST be identical for all lines in a box
+   - Use the formula: width = opening_border(1) + space(1) + text(n) + padding_spaces(x) + space(1) + closing_border(1)
+
+#### Character Usage Rules:
+- **Box corners**: `┌` `┐` (top), `└` `┘` (bottom)
+- **Lines**: `─` (horizontal), `│` (vertical)
+- **Junctions**: `├` `┤` `┬` `┴` `┼`
+- **Arrows**: `▼` `▲` `◄` `►`
+
+#### MANDATORY Box Construction Pattern:
+```
+For a box with content lines of varying length:
+1. Find longest line: "SerilogLoggingService (Alternative)" = 36 chars
+2. Add padding: 36 + 4 = 40 total width
+3. Create box:
+
+┌──────────────────────────────────────┐  <- 40 chars total
+│ SerilogLoggingService (Alternative)  │  <- 2 + 36 + 2 = 40
+│ Utilities/                           │  <- 2 + 10 + 28 spaces + 2 = 40
+│ - Structured logging                 │  <- 2 + 20 + 18 spaces + 2 = 40
+└──────────────────────────────────────┘  <- 40 chars total
+```
+
+#### Example of PERFECT Alignment:
 ```markdown
 ## Visual Architecture Overview
 
-┌─────────────────────────────────────────────────────────┐
-│                    Application Layer                      │
-│                   src/app/app.component.ts                │
-└─────────────────────────────────────────────────────────┘
-                              │
-        ┌─────────────────────┴─────────────────────┐
-        ▼                                           ▼
-┌──────────────────┐                    ┌──────────────────┐
-│  Services Layer  │◄───────────────────►│   Pages/Views    │
-│  - AuthService   │                    │  - HomePage      │
-│  - DataService   │                    │  - ProfilePage   │
-└──────────────────┘                    └──────────────────┘
-        ▲                                           ▲
-        └─────────────────────┬─────────────────────┘
-                              ▼
-                  ┌──────────────────┐
-                  │ Shared Components │
-                  │  - HeaderComponent│
-                  │  - FooterComponent│
-                  └──────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│                    Application Layer                     │
+│                 src/app/app.component.ts                 │
+└────────────────────────────┬─────────────────────────────┘
+                             │
+        ┌────────────────────┴────────────────────┐
+        ▼                                         ▼
+┌──────────────────────┐          ┌──────────────────────┐
+│   Services Layer    │          │    Pages/Views      │
+│  - AuthService      │          │   - HomePage        │
+│  - DataService      │          │   - ProfilePage     │
+└──────────────────────┘          └──────────────────────┘
+        ▲                                         ▲
+        └────────────────────┬────────────────────┘
+                             ▼
+                  ┌──────────────────────┐
+                  │  Shared Components  │
+                  │  - HeaderComponent  │
+                  │  - FooterComponent  │
+                  └──────────────────────┘
 ```
+
+#### STRICT Validation Rules (MUST CHECK):
+1. **Line Length Test**: Copy each box line and verify character count is identical
+2. **Column Alignment Test**: All `│` characters in same logical column must be at same position
+3. **Box Closure Test**: Top and bottom borders must be exactly same length
+4. **Padding Test**: Every line must have spaces to reach the closing `│`
+
+#### Common FAILURES to PREVENT:
+```
+WRONG - Variable line lengths:
+┌────────────────────┐
+│ SerilogLoggingService (Alternative)  <- 38 chars from start
+│ Utilities/           <- 13 chars from start (WRONG!)
+│ - Structured logging <- 22 chars from start (WRONG!)
+└────────────────────┘
+
+CORRECT - Consistent line lengths:
+┌──────────────────────────────────────┐
+│ SerilogLoggingService (Alternative)  │  <- 40 chars
+│ Utilities/                           │  <- 40 chars
+│ - Structured logging                 │  <- 40 chars
+└──────────────────────────────────────┘
+
+WRONG - Mismatched box widths in same row:
+┌──────────────────┐     ┌────────────────────────┐
+│ Short Box        │     │ This is a longer box   │
+└──────────────────┘     └────────────────────────┘
+
+CORRECT - Matched widths:
+┌────────────────────────┐     ┌────────────────────────┐
+│ Short Box              │     │ This is a longer box   │
+└────────────────────────┘     └────────────────────────┘
+```
+
+#### Implementation Checklist (MANDATORY):
+- [ ] Calculate the maximum text width across ALL boxes
+- [ ] Set a standard width for all boxes in the same row/column
+- [ ] Count characters for EVERY line to ensure exact width
+- [ ] Pad EVERY line with spaces to reach the closing `│`
+- [ ] Verify closing `│` is at the EXACT same column for all lines
+- [ ] Test by selecting text - all box lines should highlight to same width
+- [ ] Double-check that top `─` count equals bottom `─` count
+
+#### ALGORITHMIC APPROACH (REQUIRED):
+When creating boxes, use this exact algorithm:
+```python
+def create_box(lines, min_width=None):
+    # Step 1: Find the maximum line length
+    max_length = max(len(line) for line in lines)
+    if min_width:
+        max_length = max(max_length, min_width)
+    
+    # Step 2: Add padding (2 spaces on each side)
+    box_width = max_length + 4
+    
+    # Step 3: Create the box
+    top = "┌" + "─" * (box_width - 2) + "┐"
+    bottom = "└" + "─" * (box_width - 2) + "┘"
+    
+    # Step 4: Create middle lines with exact padding
+    middle_lines = []
+    for line in lines:
+        spaces_needed = box_width - len(line) - 4  # 4 = "│ " + " │"
+        padded_line = "│ " + line + " " * spaces_needed + " │"
+        middle_lines.append(padded_line)
+    
+    return [top] + middle_lines + [bottom]
+```
+
+**NEVER** manually type spaces to "look right" - ALWAYS calculate exact padding mathematically!
+
+#### VERIFICATION STEPS (CRITICAL):
+After creating ANY ASCII diagram:
+
+1. **Character Count Verification**:
+   - Select each line of a box (including borders)
+   - Verify all lines have EXACT same character count
+   - Example: If top border is 42 chars, ALL lines must be 42 chars
+
+2. **Visual Alignment Check**:
+   - The closing `│` of every line in a box MUST be in the same column
+   - When viewed in monospace font, vertical edges must form perfect straight lines
+   - NO jagged edges or misaligned characters allowed
+
+3. **Box Consistency Rule**:
+   - If two boxes are side-by-side, they MUST have identical widths
+   - If boxes are in a vertical stack with connectors, the connectors must align perfectly
+
+4. **Mathematical Verification**:
+   For each line in a box, verify this equation:
+   ```
+   Total Width = 1 (│) + 1 (space) + text_length + padding_spaces + 1 (space) + 1 (│)
+   
+   Where: padding_spaces = Total Width - 4 - text_length
+   ```
+
+5. **Common Alignment Errors to Check**:
+   - Missing trailing spaces before closing `│`
+   - Unequal top and bottom border lengths
+   - Inconsistent padding between lines
+   - Boxes in same row with different widths
 
 ### 6. **Document Every Component Comprehensively**
 
