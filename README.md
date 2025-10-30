@@ -1,6 +1,56 @@
 # Claude Code Agents
 
-This directory contains specialized agent configurations for Claude Code that extend its capabilities with focused expertise in specific domains. These agents are automatically available in Claude Code and can be invoked using the Task tool.
+This directory contains specialized agent configurations for Claude Code that extend its capabilities with focused expertise in specific domains. Once installed, these agents can be invoked using the Task tool.
+
+## Installation
+
+These are custom agents for Claude Code. To use them, you need to install them in your Claude Code agents directory.
+
+### Installation Steps
+
+1. **Clone or download this repository**:
+   ```bash
+   git clone <repository-url>
+   ```
+
+2. **Copy agent files to your Claude Code agents directory**:
+   ```bash
+   cp *.md ~/.claude/agents/
+   ```
+
+   Or if you cloned the entire repository:
+   ```bash
+   cp <repository-path>/*.md ~/.claude/agents/
+   ```
+
+3. **Verify installation**:
+   - The agents should now be available in Claude Code
+   - Claude Code will automatically detect any `.md` files with proper frontmatter in `~/.claude/agents/`
+
+### Requirements
+
+- Claude Code must be installed and configured
+- The `~/.claude/agents/` directory should exist (created automatically by Claude Code)
+
+### Quick Start
+
+To use an agent, simply ask Claude Code to perform a task that matches the agent's purpose:
+
+```
+# Code review
+"Can you review this authentication code?"
+
+# Documentation
+"Please document the new API endpoints"
+
+# Performance optimization
+"My application is slow, help me optimize it"
+
+# Security audit
+"Check if my code has security vulnerabilities"
+```
+
+Claude Code will automatically select and invoke the appropriate agent based on your request. You can also manually request specific agents using the Task tool.
 
 ## Available Agents
 
