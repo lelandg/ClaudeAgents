@@ -1,4 +1,4 @@
-# USAGE: 1. Copy this file to ~/.claude/CLAUDE.md. 2. Restart all Claude instances.
+## USAGE: <br> 1. Copy this file to ~/.claude/CLAUDE.md. <br> 2. Restart all Claude instances.
 
 ## Work Procedures
 - When I ask you to update the code map (or CodeMap), check the last date it was modified, then use git history to look for changes and update appropriate sections.
