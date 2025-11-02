@@ -1,4 +1,4 @@
-## USAGE: <br> 1. Copy this file to ~/.claude/CLAUDE.md. <br> 2. Restart all Claude instances.
+## USAGE: <br> 1. Copy this file to ~/.claude/CLAUDE.md. <br> 2. Edit it to change/remove `Development Environment` section, as needed. <br> 3. Edit other sections, as desired. <br> 4. Optionally, remove this line. <br> 5. Restart all Claude instances.
 
 ## Work Procedures
 - When I ask you to update the code map (or CodeMap), check the last date it was modified, then use git history to look for changes and update appropriate sections.
@@ -143,37 +143,12 @@ Use `file_path:line_number` references from the code map to quickly locate speci
 
 **IMPORTANT**: Use the convenient symbolic links when working with MeshForge directories:
 
-### MeshForge Symbolic Links (Project Root)
-These symbolic links in the MeshForge project root provide quick access without long paths:
-- **`_bin_debug`** → `/mnt/d/Documents/Code/GitHub/.Net/MeshForge/bin/Debug/net8.0-windows/win-x64`
-- **`_bin_release`** → `/mnt/d/Documents/Code/GitHub/.Net/MeshForge/bin/Release/net8.0-windows/win-x64`
-- **`_meshforge_appdata`** → `/mnt/c/Users/aboog/AppData/Roaming/MeshForge/` (logs, settings, licenses)
-- **`_runtime_debug_files`** → `/mnt/d/Documents/Code/GitHub/.Net/MeshForge/bin/Release/net8.0-windows/win-x64/temp/`
-- **`_screenshots`** → `/mnt/e/Pictures/Screenshots/2025`
-
 ### Working with Files Across Directories
 
 #### Core Principles:
 - **Never use `cd` commands**: Stay in the current working directory and use absolute paths
-- **Always use full paths**: Specify complete paths like `/mnt/d/Documents/Code/GitHub/ProjectName/file.py`
-- **Batch operations**: Call multiple tools in parallel when searching different locations
-
-#### Tool-Specific Guidelines:
-
-**For File Searches:**
-- Use `Grep` with the `path` parameter: `Grep(pattern="TODO", path="/mnt/d/Documents/Code/GitHub/ProjectName")`
-- Use `Glob` with the `path` parameter: `Glob(pattern="*.py", path="/mnt/d/Documents/Code/GitHub/ProjectName/src")`
-- Combine patterns for efficiency: `Glob(pattern="**/*.{py,js,ts}", path="/absolute/path")`
-
-**For File Operations:**
-- Reading: Always provide full path: `Read(file_path="/mnt/d/Documents/Code/GitHub/ProjectName/src/main.py")`
-- Listing: Use absolute paths: `LS(path="/mnt/d/Documents/Code/GitHub/ProjectName/src")`
-- Editing: Full paths required: `Edit(file_path="/full/path/to/file.py", ...)`
-
-**For Bash Commands:**
-- Use absolute paths in commands: `python3 /mnt/d/Documents/Code/GitHub/ProjectName/script.py`
-- For wildcards: `ls -la /mnt/d/Documents/Code/GitHub/*/README.md`
-- For git operations: `git -C /mnt/d/Documents/Code/GitHub/ProjectName status`
+- **Always use full paths**: Specify complete paths for all file operations
+- **Batch operations**: Call multiple tools in parallel when searching
 
 ## Development Environments
 - I use Jetbrains IDEs. I have all products. I use PyCharm, Rider, and Webstorm a lot.
@@ -283,7 +258,7 @@ When creating configuration management for a new project:
 - Create config directory with `mkdir(parents=True, exist_ok=True)`
 
 ## Screenshots and Analysis Guidelines
-- Screenshots are stored in `_screenshots` symlink (points to `/mnt/e/Pictures/Screenshots/2025`)
+- Screenshots are stored in `_screenshots` symlink 
 - To find the most recent screenshot, e.g., to find newest 3 use: `ls -lt _screenshots/*.png | head -3 | awk '{print $9}'`
 - If I refer to just one "screenshot," look at the newest one based on timestamp.
 - If I refer to "# screenshots," consider only the # newest. Examine the newest one first based on timestamp.
